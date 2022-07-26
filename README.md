@@ -54,7 +54,7 @@ SM2是一种非对称加密算法。它基于椭圆曲线密码的公钥密码�
 ### mirvar
 函数原型：flash mirvar(iv)
 
-功能：通过为big/flash变量保留适当数量的内存位置来初始化该变量。这个内存可以通过随后调用mirkill函数来释放。
+功能：通过为big/flash变量保留适当数量的内存位置来初始化该变量，这个内存可以通过随后调用mirkill函数来释放。
 
 ### ecurve_init
 
@@ -72,7 +72,7 @@ SM2是一种非对称加密算法。它基于椭圆曲线密码的公钥密码�
 
 函数原型：epoint* epoint_init()
 
-功能：初始化点 返回epoint类型点
+功能：初始化点，返回epoint类型点
 
 ### epoint_free
 
