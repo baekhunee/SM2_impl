@@ -119,6 +119,11 @@ n = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123
 
 SM2加密函数
 
+注意：每次加密时，使用bigrand(n, k)产生一个新的随机数k，防止重复使用k导致私钥泄露。
+
 ### int SM2_dec(uc* ciphertext, int lp, uc* sk, int lsk, uc* plaintext)
 
 SM2解密函数
+
+# 测试截图
+![image](https://user-images.githubusercontent.com/105578152/180918063-bf63a244-7e57-4e75-bfe3-dc0ef2ba3d5d.png)
