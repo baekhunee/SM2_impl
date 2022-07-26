@@ -12,7 +12,7 @@ SM2 implementation
 git账户名称：baekhunee
 
 # Miracl库
-MIRACL(Multiprecision Integer and Rational Arithmetic C/c++ Library)是一套由Shamus Software Ltd.所开发的一套关于大数运算函数库，用来设计与大数运算相关的密码学之应用，包含了RSA 公开密码学、Diffie-Hellman密钥交换(Key Exchange)、AES、DSA数字签名，还包含了较新的椭圆曲线密码学(Elliptic Curve Cryptography)等，运算速度快，并提供源代码。
+MIRACL(Multiprecision Integer and Rational Arithmetic C/C++ Library)是一套由Shamus Software Ltd.所开发的一套关于大数运算函数库，用来设计与大数运算相关的密码学之应用，包含了RSA 公开密码学、Diffie-Hellman密钥交换(Key Exchange)、AES、DSA数字签名，还包含了较新的椭圆曲线密码学(Elliptic Curve Cryptography)等，运算速度快，并提供源代码。
 
 本次实验基于Miracl库实现SM2，需要自行下载源码在VS2019中搭建，总体过程较为顺利，在此不过多赘述。
 
