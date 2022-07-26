@@ -15,15 +15,6 @@ extern "C"
 }
 #pragma comment(lib,"miracl.lib")
 
-//²Î¿¼ÎÄÏ×£ºCSDN£ºSM2 ÍÖÔ²ÇúÏß¹«Ô¿ÃÜÂëËã·¨
-//miracl¿â³£ÓÃº¯Êı
-//mivar(iv)->int iv ³õÊ¼»¯
-//big x;mirkill(x)->ÊÍ·Å´óÊ÷
-//cotnum(n, stdout)->´òÓ¡n
-//cinnum(n, stdin)->ÊäÈën
-//cinstr()½«´óÊı×Ö·û´®×ª»¯³É´óÊı
-
-
 void print_buf(uc* buf, int len)
 {
 	for (int i = 0; i < len; i++)
@@ -51,16 +42,16 @@ struct curve  _init_value=
 	"BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0",
 };
 
-//Éú³É½ÓÊÕ·½µÄ¹«Ë½Ô¿¶Ô
+//ç”Ÿæˆæ¥æ”¶æ–¹çš„å…¬ç§é’¥å¯¹
 void keygen(uc* X, int* lx, uc* Y, int* ly, uc* sk, int* lsk)
 {
 	struct curve* s = &_init_value;
 	epoint* g, * pk;
 	big a, b, p, n, x, y, k;
-	miracl* mip = mirsys(20, 0);//³õÊ¼»¯miraclÏµÍ³
-	mip->IOBASE = 16;//ÊäÈëÎª16½øÖÆ
+	miracl* mip = mirsys(20, 0);//åˆå§‹åŒ–miraclç³»ç»Ÿ
+	mip->IOBASE = 16;//è¾“å…¥ä¸º16è¿›åˆ¶
 
-	//³õÊ¼»¯
+	//åˆå§‹åŒ–
 	p = mirvar(0);
 	a = mirvar(0);
 	b = mirvar(0);
@@ -69,7 +60,7 @@ void keygen(uc* X, int* lx, uc* Y, int* ly, uc* sk, int* lsk)
 	y = mirvar(0);
 	k = mirvar(0);
 
-	//½«16½øÖÆ×Ö·û´®×ª»¯³ÉbigÀàĞÍ
+	//å°†16è¿›åˆ¶å­—ç¬¦ä¸²è½¬åŒ–æˆbigç±»å‹
 	cinstr(p, s->p);
 	cinstr(a, s->a);
 	cinstr(b, s->b);
@@ -77,24 +68,24 @@ void keygen(uc* X, int* lx, uc* Y, int* ly, uc* sk, int* lsk)
 	cinstr(x, s->x);
 	cinstr(y, s->y);
 
-	//³õÊ¼»¯ÍÖÔ²ÇúÏß
+	//åˆå§‹åŒ–æ¤­åœ†æ›²çº¿
 	ecurve_init(a, b, p, MR_PROJECTIVE);
-	g = epoint_init();//³õÊ¼»¯ÎªÎŞÇîÔ¶µã
+	g = epoint_init();//åˆå§‹åŒ–ä¸ºæ— ç©·è¿œç‚¹
 	pk = epoint_init();
-	epoint_set(x, y, 0, g);//ÉèÖÃµã×ø±ê g=(x,y)
+	epoint_set(x, y, 0, g);//è®¾ç½®ç‚¹åæ ‡ g=(x,y)
 
-	//²úÉúË½Ô¿
-	irand(time(NULL) + SEED);//³õÊ¼»¯ÖÖ×Ó
+	//äº§ç”Ÿç§é’¥
+	irand(time(NULL) + SEED);//åˆå§‹åŒ–ç§å­
 	bigrand(n, k);
-	ecurve_mult(k, g, pk);//µã³Ë£ºt=k*g
+	ecurve_mult(k, g, pk);//ç‚¹ä¹˜ï¼št=k*g
 	epoint_get(pk, x, y);
 
-	//Ğ´Èë¹«Ô¿
+	//å†™å…¥å…¬é’¥
 	*lx = big_to_bytes(0, x, (char*)X, FALSE);
 	*ly = big_to_bytes(0, y, (char*)Y, FALSE);
 	*lsk = big_to_bytes(0, k, (char*)sk, FALSE);
 
-	//ÊÍ·ÅÄÚ´æ
+	//é‡Šæ”¾å†…å­˜
 	mirkill(p);
 	mirkill(a);
 	mirkill(b);
@@ -102,7 +93,7 @@ void keygen(uc* X, int* lx, uc* Y, int* ly, uc* sk, int* lsk)
 	mirkill(x);
 	mirkill(y);
 	mirkill(k);
-	epoint_free(g);//ÊÍ·ÅµãÄÚ´æ
+	epoint_free(g);//é‡Šæ”¾ç‚¹å†…å­˜
 	epoint_free(pk);
 	mirexit();
 }
@@ -115,7 +106,7 @@ int KDF(uc* x, uc* y, int l, uc* keybuf)
 	uc* p;
 	p = keybuf;
 
-	//´«Èëbuffer
+	//ä¼ å…¥buffer
 	memcpy(buf, x, 32);
 	memcpy(buf + 32, y, 32);
 
@@ -165,10 +156,10 @@ int SM2_enc(uc* plaintext, int lp, uc* X, int lx, uc* Y, int ly, uc* ciphertext)
 	tmp = (uc*)malloc(lp + 64);
 	if (tmp == NULL)
 		return -1;
-	miracl* mip = mirsys(20, 0);//³õÊ¼»¯miraclÏµÍ³
+	miracl* mip = mirsys(20, 0);//åˆå§‹åŒ–miraclç³»ç»Ÿ
 	mip->IOBASE = 16;
 
-	//³õÊ¼»¯
+	//åˆå§‹åŒ–
 	p = mirvar(0);
 	a = mirvar(0);
 	b = mirvar(0);
@@ -181,7 +172,7 @@ int SM2_enc(uc* plaintext, int lp, uc* X, int lx, uc* Y, int ly, uc* ciphertext)
 	y1 = mirvar(0);
 	y2 = mirvar(0);
 
-	//½«´óÊı×Ö·û´®±äÎª´óÊı
+	//å°†å¤§æ•°å­—ç¬¦ä¸²å˜ä¸ºå¤§æ•°
 	cinstr(p, s->p);
 	cinstr(a, s->a);
 	cinstr(b, s->b);
@@ -189,21 +180,21 @@ int SM2_enc(uc* plaintext, int lp, uc* X, int lx, uc* Y, int ly, uc* ciphertext)
 	cinstr(x, s->x);
 	cinstr(y, s->y);
 
-	//³õÊ¼»¯ÍÖÔ²ÇúÏß
+	//åˆå§‹åŒ–æ¤­åœ†æ›²çº¿
 	ecurve_init(a, b, p, MR_PROJECTIVE);
-	g = epoint_init();//³õÊ¼»¯ÎªÎŞÇîÔ¶µã
+	g = epoint_init();//åˆå§‹åŒ–ä¸ºæ— ç©·è¿œç‚¹
 	t = epoint_init();
 	c = epoint_init();
 	p1 = epoint_init();
 	kp1 = epoint_init();
 	epoint_set(x, y, 0, g);
 
-	//½«¹«Ô¿X,Y¸³Öµ¸øx,y
+	//å°†å…¬é’¥X,Yèµ‹å€¼ç»™x,y
 	bytes_to_big(lx, (char*)X, x);
 	bytes_to_big(ly, (char*)Y, y);
 	epoint_set(x, y, 0, t);
 
-	//Ñ¡È¡Ëæ»úÊık
+	//é€‰å–éšæœºæ•°k
 	irand(time(NULL) + SEED);
 another_loop:
 	do
@@ -211,7 +202,7 @@ another_loop:
 		bigrand(n, k);
 	} while (k->len == 0);
 
-	ecurve_mult(k, g, c);//µã³Ë£¬c=k*g
+	ecurve_mult(k, g, c);//ç‚¹ä¹˜ï¼Œc=k*g
 	epoint_get(c, x1, y1);
 	big_to_bytes(32, x1, (char*)ciphertext, TRUE);
 	big_to_bytes(32, y1, (char*)ciphertext + 32, TRUE);
@@ -220,7 +211,7 @@ another_loop:
 		goto exit_enc;
 
 	ecurve_mult(k, p1, kp1);//kp1=k*p1
-	epoint_get(kp1, x2, y2);//´Ókp1µÃµ½x2,y2
+	epoint_get(kp1, x2, y2);//ä»kp1å¾—åˆ°x2,y2
 	big_to_bytes(32, x2, (char*)tl, TRUE); 
 	big_to_bytes(32, y2, (char*)tr, TRUE);
 
@@ -249,7 +240,7 @@ exit_enc:
 	mirkill(x2);
 	mirkill(y1);
 	mirkill(y2);
-	epoint_free(g);   //ÊÍ·ÅµãÄÚ´æ
+	epoint_free(g);   //é‡Šæ”¾ç‚¹å†…å­˜
 	epoint_free(t);
 	epoint_free(p1);
 	epoint_free(kp1);
@@ -274,7 +265,7 @@ int SM2_dec(uc* ciphertext, int lp, uc* sk, int lsk, uc* plaintext)
 	if (lp < 96)
 		return 0;
 	lp -= 96;
-	miracl* mip = mirsys(20, 0);//³õÊ¼»¯miraclÏµÍ³
+	miracl* mip = mirsys(20, 0);//åˆå§‹åŒ–miraclç³»ç»Ÿ
 	mip->IOBASE = 16;
 
 	
@@ -300,15 +291,15 @@ int SM2_dec(uc* ciphertext, int lp, uc* sk, int lsk, uc* plaintext)
 	cinstr(y, s->y);
 
 	ecurve_init(a, b, p, MR_PROJECTIVE);
-	g = epoint_init();//³õÊ¼»¯ÎªÎŞÇîÔ¶µã
+	g = epoint_init();//åˆå§‹åŒ–ä¸ºæ— ç©·è¿œç‚¹
 	c1 = epoint_init();
 	dc1 = epoint_init();
 	bytes_to_big(32, (char*)ciphertext, x);  
 	bytes_to_big(32, (char*)ciphertext + 32, y);
 
-	if (!epoint_set(x, y, 0, c1))//³õÊ¼»¯µã²»ÔÚÍÖÔ²ÇúÏßÉÏ£¬ÍË³ö
+	if (!epoint_set(x, y, 0, c1))//åˆå§‹åŒ–ç‚¹ä¸åœ¨æ¤­åœ†æ›²çº¿ä¸Šï¼Œé€€å‡º
 		goto exit_dec;
-	if (point_at_infinity(c1))//ÎŞÇîÔ¶µãÍË³ö
+	if (point_at_infinity(c1))//æ— ç©·è¿œç‚¹é€€å‡º
 		goto exit_dec;
 
 	ecurve_mult(d, c1, dc1);
