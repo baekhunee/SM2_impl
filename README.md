@@ -29,7 +29,7 @@ SM2是一种非对称加密算法。它基于椭圆曲线密码的公钥密码�
 ### 解密算法
 ![image](https://user-images.githubusercontent.com/105578152/180912258-cd84b720-c088-4379-9856-330f67b682cf.png)
 
-# 代码部分说明
+# 部分代码说明
 ## miracl库常用函数
 ### add
 函数原型：void add(x,y,z)
@@ -85,3 +85,35 @@ SM2是一种非对称加密算法。它基于椭圆曲线密码的公钥密码�
 函数原型：BOOL epoint_set(x,y,lsb,p)
 
 功能：设置点坐标
+
+## SM2_impl.cpp
+
+### void print_buf(uc* buf, int len)
+
+用于输出buffer中的内容
+
+### 椭圆曲线参数
+a = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC
+b = 0x28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93
+p = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF
+x = 0x32c4ae2c1f1981195f9904466a39c9948fe30bbff2660be1715a4589334c74c7
+y = 0xbc3736a2f4f6779c59bdcee36b692153d0a9877cc62a474002df32e52139f0a0
+n = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123
+
+### void keygen(uc* X, int* lx, uc* Y, int* ly, uc* sk, int* lsk)
+
+用于生成接收方的公私钥对。
+
+实现过程中，miracl系统以及椭圆曲线均需要初始化，并且在使用完成后应及时释放内存。
+
+### int KDF(uc* x, uc* y, int l, uc* keybuf)
+
+密钥派生函数
+
+### int SM2_enc(uc* plaintext, int lp, uc* X, int lx, uc* Y, int ly, uc* ciphertext)
+
+SM2加密函数
+
+### int SM2_dec(uc* ciphertext, int lp, uc* sk, int lsk, uc* plaintext)
+
+SM2解密函数
